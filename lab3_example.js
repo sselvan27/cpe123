@@ -1,11 +1,24 @@
 function setup() {
-	createCanvas(400, 400);
-	background(95,165,255);
+	createCanvas(750, 900);
 }
 
-var click = false;
+var click = false;//controlling legs and beak show up
+var clicked1 = false;//noodles shpow up
+var emx = 0;//noodles animation
+var emy = 0;
+var counter = 2;
+var linex1,liney1,linex2,liney2;
 
-
+//click sun and flowers shou up
+function sun(sPX, sPY){
+	translate(sPX, sPY);
+	ellipse(0, 0, 30);
+	
+	for (i=0, i < 10, i++){
+	  line(linex1, liney1, linex2, line2);
+	}
+	
+}
 //legs 
 function birdLegs()
 {
@@ -231,6 +244,10 @@ function mousePressed()
 		birdBeak();
 		birdFood();
 	
+	if (mouseX > (width/2 - 40) && mouseX < (width/2 + 40) && mouseY > (height/2-20-500/3-70) && mouseY < (height/2-20+10)){
+        clicked1 = true;
+        counter ++;
+  }
 		
 }
 
@@ -736,24 +753,22 @@ ellipse(240,190,70,80);
 fill(225);
 ellipse(265,165,20);
 
-
-
+background(255, 120, 37);
+  fork(width/2, 2/3*height, 0, 0, -40);
+  if (clicked1){
+    earbuds(width/2, height/2-20, emx, emy);
+    
+    if (counter%2 == 0){
+        if (emx < 100){
+      emx++;
+      }
+        if (emy < 100){
+      emy++;
+      }
+    }
+  }
 
 }
-
-
-function setup() {
-  createCanvas(350, 500);
-}
-var clicked1 = false;
-//var epy = -100;
-//var clicked2 = flase;
-var emx = 0;
-var emy = 0;
-var counter = 2;
-//var scl = 0.5;
-//var mpx = width/2-30;
-//var mpy = height/2-20+135;
 
 function fork(fPX, fPY, fMX, fMY, tx){
   push();
@@ -847,22 +862,10 @@ function music(mPX, mPY, scl){
    line(20, 10, 15, 15);
 }
 
-function mousePressed(){
-  if (mouseX > (width/2 - 40) && mouseX < (width/2 + 40) && mouseY > (height/2-20-500/3-70) && mouseY < (height/2-20+10)){
-    clicked1 = true;
-    counter ++;
-    //if (((mouseX-(width/2-30))^2+(mouseY-(height/2-20+135))^2)-(15)^2 < 0){
-    //clicked2 = true;
-    //}
-  }
-}
-
 function draw() {
   background(255, 120, 37);
+  //background(95,165,255);
   fork(width/2, 2/3*height, 0, 0, -40);
-  //if (fPY > 2/3*height){
-   // fPY--;
-  //}
   if (clicked1){
     earbuds(width/2, height/2-20, emx, emy);
     
@@ -873,13 +876,8 @@ function draw() {
         if (emy < 100){
       emy++;
       }
-      //music(width/2-30, height/2-20+135);
     }
   }
-  
-  //if (clicked2){
-    
-  //}
 }
 
 
