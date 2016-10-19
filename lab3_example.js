@@ -1,15 +1,118 @@
+/* All code created by Jessica Xu and Sveta Selvan
+   CPE 123 (Computational Art)
+   10/19/16
+ */
+
 function setup() {
-	createCanvas(400, 400);
-	background(95,165,255);
+  createCanvas(350 + 400, 500);
 }
+
+var clicked1 = false;
+var emx = 0;
+var emy = 0;
+var counter = 2;
+var transJX = 190;
+var transJY = 80;
+var scx, scy;
+var t=0;
 
 var click = false;
 
+function fork(fPX, fPY, fMX, fMY, tx, rot){
+  push();
+  translate(fPX,fPY);//(width/2, 2/3*height)
+  rotate(rot);
+  fill(37,124,255);
+  stroke(37,124,255);
+  strokeWeight(5);
+  strokeJoin(ROUND); 
+  quad(-10, 0, -15, height-fPY, 15, height-fPY, 10, 0);//handle
+  strokeWeight(10);
+  quad(-10, 10, -40, -50, 40, -50, 10, 10);
+  rect(-39, -70, 78, 25)
+  strokeWeight(5);
+  triangle(tx, -70, tx+10, -500/3-70, tx+20, -70);
+  triangle(tx+20, -65, tx+10+20, -500/3-70, tx+20+20, -65);
+  triangle(tx+40, -65, tx+10+40, -500/3-70, tx+20+40, -65);
+  triangle(tx+60, -65, tx+10+60, -500/3-70, tx+20+60, -65);
+  pop();
+}
+
+function earbuds(ePX, ePY, eMX, eMY, rot){
+  push();
+  translate(ePX,ePY);//(width/2, height/2)
+  rotate(rot);
+  fill(255, 230, 30);
+  stroke(255, 230, 30);
+  strokeWeight(10);
+  strokeJoin(ROUND); 
+  //1st layer cables
+  curve(40+eMX, -40+eMY, -40, 0, 40, 20, 80+eMX, -20+eMY);
+  curve(40+eMX, -40+eMY, -40, -20, 40, 10, 80+eMX, -20+eMY);
+  curve(40+eMX, -40+eMY, -40, -60, 40, -10, 80+eMX, -20+eMY);
+  //2nd layer cables
+  //fill(255, 240, 37);
+  stroke(255, 240, 37);
+  curve(-30+eMX, -40+eMY, -40, -65, 40, -65, 30+eMX, -40+eMY);
+  curve(-30+eMX, -40+eMY, -40, -80, 40, -80, 30+eMX, -40+eMY);
+  curve(-30+eMX, -40+eMY, -40, -95, 40, -95, 30+eMX, -40+eMY);
+  curve(-60+eMX, -80+eMY, -40, -30, 40, -40, -100+eMX, -60+eMY);
+  curve(-60+eMX, -80+eMY, -40, -45, 40, -55, -100+eMX, -60+eMY);
+  curve(-60+eMX, -80+eMY, -40, -15, 40, -30, -100+eMX, -60+eMY);
+  curve(-30+eMX, -40+eMY, -40, 30, 40, 30, 30+eMX, -40+eMY);
+  //3rd layer cables
+  //fill(255, 250, 45);
+  stroke(255, 250, 45);
+  curve(40+eMX, -40+eMY, -40, -70, 40, 5, 80+eMX, -20+eMY);
+  curve(-150+eMX, -50+eMY, -40, 25, 40, -55, -150+eMX, -50+eMY);
+  curve(-80+eMX, -40+eMY, -45, 15, 45, -70, -150+eMX, -50+eMY);
+}
+
+//plug
+function plug(pPX, pPY, rot){
+  push();
+  translate(pPX, pPY);
+  rotate(rot);
+  stroke(255, 230, 30);
+  line(40, 35, 40, 100);
+  stroke(255,241,170);
+  strokeWeight(12);
+  line(40, 100, 40, 110)
+  stroke(0);
+  strokeWeight(9);
+  line(40, 130, 40, 145);
+  stroke(255,241,203);
+  strokeWeight(15);
+  line(40, 110, 40, 125);
+  stroke(0);
+  strokeWeight(7);
+  line(40, 145, 40, 155);
+  pop();
+}
+
+//earsPlug
+function earsPlug(epPX, epPY, rot){
+  push();
+  translate(epPX, epPY);
+  rotate(rot);
+  strokeWeight(10);
+  stroke(255, 230, 30);
+  line(-40, 35, -40, 100);
+  strokeWeight(12);
+  stroke(255,241,170);
+  line(-40, 100, -40, 110);
+  stroke(255,241,203);
+  strokeWeight(15);
+  line(-40, 110, -40, 125);
+  strokeWeight(5);
+  ellipse(-30, 135, 30);
+  pop();
+}
 
 //legs 
 function birdLegs()
 {
-	
+  
 fill(207,147,52);
 beginShape();
 vertex(180, 225);
@@ -210,36 +313,8 @@ bezierVertex(326, 245, 326, 245, 326, 245);
 endShape(CLOSE);
 }
 
-// birds eye 
-
-function birdFood()
-{
-fill (64,51,30);
-ellipse(330,330,9,10);
-
-fill (64,51,30);
-ellipse(360,360,9,10);
-
-fill (64,51,30);
-ellipse(370,320,9,10);
-}
-
-function mousePressed()
-{
-	if (Math.pow(mouseX - 240,2) + Math.pow(mouseY - 190,2) - Math.pow(40,2) < 0)
-		birdLegs();
-		birdBeak();
-		birdFood();
-	
-		
-}
-
-
-function draw() {
-
-
-// body 
-
+// bird body 
+function birdBody(){
 fill(193,205,209);
 noStroke();
 beginShape();
@@ -276,11 +351,10 @@ bezierVertex(143, 124, 143, 124, 143, 124);
 bezierVertex(126, 129, 126, 129, 126, 129);
 bezierVertex(115, 135, 115, 135, 115, 135);
 endShape(CLOSE);
+}
 
-
-
-// thing above body
-
+// thing above bird body
+function thingAboveBirdBody(){
 fill(99,68,47);
 noStroke();
 beginShape();
@@ -355,9 +429,10 @@ bezierVertex(339, 215, 339, 215, 339, 215);
 bezierVertex(337, 225, 337, 225, 337, 225);
 bezierVertex(335, 230, 335, 230, 335, 230);
 endShape(CLOSE);
+}
 
 //hair
-
+function birdHair(){
 fill(99,68,47);
 noStroke();
 beginShape();
@@ -379,7 +454,6 @@ bezierVertex(92, 114, 92, 114, 92, 114);
 bezierVertex(76, 105, 76, 105, 76, 105);
 bezierVertex(63, 97, 63, 97, 63, 97);
 endShape(CLOSE);
-
 
 fill(99,68,47);
 noStroke();
@@ -672,8 +746,10 @@ bezierVertex(337, 162, 337, 162, 337, 162);
 bezierVertex(339, 157, 339, 157, 339, 157);
 bezierVertex(341, 154, 341, 154, 341, 154);
 endShape(CLOSE);
+}
 
 //eye 
+function eye(){
 fill(232, 208,24);
 noStroke();
 beginShape();
@@ -727,145 +803,90 @@ bezierVertex(228, 119, 228, 119, 228, 119);
 bezierVertex(206, 117, 206, 117, 206, 117);
 bezierVertex(194, 117, 194, 117, 194, 117);
 endShape(CLOSE);
-
+}
 
 //eyes in body of bird
+function eyesInBird(){
 fill(0);
 ellipse(240,190,70,80);
 
 fill(225);
 ellipse(265,165,20);
-
-
-
-
 }
 
+// birds eye 
 
-function setup() {
-  createCanvas(350, 500);
-}
-var clicked1 = false;
-//var epy = -100;
-//var clicked2 = flase;
-var emx = 0;
-var emy = 0;
-var counter = 2;
-//var scl = 0.5;
-//var mpx = width/2-30;
-//var mpy = height/2-20+135;
+function birdFood()
+{
+fill (64,51,30);
+ellipse(330,330,9,10);
 
-function fork(fPX, fPY, fMX, fMY, tx){
-  push();
-  translate(fPX,fPY);//(width/2, 2/3*height)
-  fill(37,124,255);
-  stroke(37,124,255);
-  strokeWeight(5);
-  strokeJoin(ROUND); 
-  quad(-10, 0, -15, height-fPY, 15, height-fPY, 10, 0);//handle
-  strokeWeight(10);
-  quad(-10, 10, -40, -50, 40, -50, 10, 10);
-  rect(-39, -70, 78, 25)
-  strokeWeight(5);
-  //for(var i=0; i<4, i++){
-  triangle(tx, -70, tx+10, -500/3-70, tx+20, -70);
-  //  tx = tx + 20;
-  //}
-  //tx = -40;
-  triangle(tx+20, -65, tx+10+20, -500/3-70, tx+20+20, -65);
-  triangle(tx+40, -65, tx+10+40, -500/3-70, tx+20+40, -65);
-  triangle(tx+60, -65, tx+10+60, -500/3-70, tx+20+60, -65);
-  pop();
+fill (64,51,30);
+ellipse(360,360,9,10);
+
+fill (64,51,30);
+ellipse(370,320,9,10);
 }
 
-function earbuds(ePX,ePY,eMX,eMY){
-  push();
-  translate(ePX,ePY);//(width/2, height/2)
-  fill(255, 230, 30);
-  stroke(255, 230, 30);
-  strokeWeight(10);
-  strokeJoin(ROUND); 
-  //1st layer cables
-  curve(40+eMX, -40, -40, 0, 40, 20, 80+eMX, -20);
-  curve(40+eMX, -40, -40, -20, 40, 10, 80+eMX, -20);
-  curve(40+eMX, -40, -40, -60, 40, -10, 80+eMX, -20);
-  //2nd layer cables
-  //fill(255, 240, 37);
-  stroke(255, 240, 37);
-  curve(-30+eMX, -40, -40, -65, 40, -65, 30+eMX, -40);
-  curve(-30+eMX, -40, -40, -80, 40, -80, 30+eMX, -40);
-  curve(-30+eMX, -40, -40, -95, 40, -95, 30+eMX, -40);
-  curve(-60+eMX, -80, -40, -30, 40, -40, -100+eMX, -60);
-  curve(-60+eMX, -80, -40, -45, 40, -55, -100+eMX, -60);
-  curve(-60+eMX, -80, -40, -15, 40, -30, -100+eMX, -60);
-  curve(-30+eMX, -40, -40, 30, 40, 30, 30+eMX, -40);
-  //3rd layer cables
-  //fill(255, 250, 45);
-  stroke(255, 250, 45);
-  curve(40+eMX, -40, -40, -70, 40, 5, 80+eMX, -20);
-  curve(-150+eMX, -50, -40, 25, 40, -55, -150+eMX, -50);
-  curve(-80+eMX, -40, -45, 15, 45, -70, -150+eMX, -50);
-  //plug
-  stroke(255, 230, 30);
-  line(40, 35, 40, 100);
-  stroke(255,241,170);
-  strokeWeight(12);
-  line(40, 100, 40, 110)
-  stroke(0);
-  strokeWeight(9);
-  line(40, 130, 40, 145);
-  stroke(255,241,203);
-  strokeWeight(15);
-  line(40, 110, 40, 125);
-  stroke(0);
-  strokeWeight(7);
-  line(40, 145, 40, 155);
-  //earsPlug1
-  strokeWeight(10);
-  stroke(255, 230, 30);
-  line(-40, 35, -40, 100);
-  strokeWeight(12);
-  stroke(255,241,170);
-  line(-40, 100, -40, 110);
-  stroke(255,241,203);
-  strokeWeight(15);
-  line(-40, 110, -40, 125);
-  strokeWeight(5);
-  ellipse(-30, 135, 30);
-  pop();
-}
+function sun(scx, scy)//(600,100)
+{
+   var cx1, cx2, cy1, cy2, t;
+   
+   //draw the center of the flower
+   fill(255,255,0);
+   ellipse(scx, scy, 50);
 
-function music(mPX, mPY, scl){
-   translate(mPX, mPY);//(width/2-30, height/2-20+135)
-   scale(0.7);
-   stroke(0);
-   strokeWeight(5);
-   line(0, 0, 20, -10);
-   line(0, 0, 0, 20);
-   line(20, -10, 20, 10);
-   line(0, 20, -5, 25);
-   line(20, 10, 15, 15);
+   //draw each petal around the flower
+   t=0;
+   for (var i=0; i<10; i++) {
+      t = t + (2*PI/10);
+      cx1 = scx + 30* cos(t);
+      cx2 = scx + 50* cos(t);
+      cy1 = scy + 30 * sin(t);
+      cy2 = scy + 50 * sin(t);
+      //ellipse(cx, cy, 10);
+      strokeWeight(7);
+      stroke(255,255,0);
+      line(cx1, cy1, cx2, cy2);
+   }
 }
 
 function mousePressed(){
-  if (mouseX > (width/2 - 40) && mouseX < (width/2 + 40) && mouseY > (height/2-20-500/3-70) && mouseY < (height/2-20+10)){
+  if (mouseX > (width/2 - 40 + transJX-50) && mouseX < (width/2 + 40 + transJX-50) && mouseY > (height/2-20-500/3-70 + 200 + 150) && mouseY < (height/2-20+10 + 200 )){
     clicked1 = true;
     counter ++;
-    //if (((mouseX-(width/2-30))^2+(mouseY-(height/2-20+135))^2)-(15)^2 < 0){
-    //clicked2 = true;
-    //}
+  }
+
+  if (Math.pow(mouseX - 240,2) + Math.pow(mouseY - 190,2) - Math.pow(40,2) < 0){
+    click = true;
   }
 }
 
 function draw() {
-  background(255, 120, 37);
-  fork(width/2, 2/3*height, 0, 0, -40);
-  //if (fPY > 2/3*height){
-   // fPY--;
-  //}
+  background(84,21,21);
+
+  birdBody();
+  thingAboveBirdBody();
+  birdHair();
+  eye();
+  eyesInBird();
+  fork(width/2 + transJX, 2/3*height + transJY, 0, 0, -40, -PI/3);
+
+  if (click == true){
+     birdLegs();
+     birdBeak();
+     birdFood();
+     t = t + .01;
+     scx = 600 + 50* cos(t);
+     scy = 100 + 50 * sin(t);
+     sun(scx,scy);
+  }
+
   if (clicked1){
-    earbuds(width/2, height/2-20, emx, emy);
-    
+    earbuds(width/2 + transJX - 65, height/2-20+65 + transJY, emx, emy, -PI/3);
+    plug(-30, -150, PI/3);
+    earsPlug(0, -45, PI/3);
+
     if (counter%2 == 0){
         if (emx < 100){
       emx++;
@@ -873,15 +894,10 @@ function draw() {
         if (emy < 100){
       emy++;
       }
-      //music(width/2-30, height/2-20+135);
     }
   }
-  
-  //if (clicked2){
-    
-  //}
+ 
 }
-
 
 
 
